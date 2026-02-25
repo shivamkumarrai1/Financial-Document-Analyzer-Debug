@@ -1,13 +1,13 @@
-#### BUGS and THIER RESOLUTIONS 
+## BUGS and THIER RESOLUTIONS 
 
-   # very first step is to create virtual environemnt and add .env file and inside of that env file which ever LLm model is used , must be configured inside that.
-
-# I have used OpenRouter and configured its API kEY for testing purpose.
+ very first step is to create virtual environemnt and add .env file and inside of that env file which ever LLm model is used , must be configured inside that.
+ [I have used OpenRouter and configured its API kEY for testing purpose.]
 
 # list of the Bugs :
 
-#1 Missing python-multipart Dependency
-# Issue
+
+# [1] Missing python-multipart Dependency
+-Issue
 
 FastAPI requires python-multipart when handling file uploads using:
 
@@ -17,7 +17,7 @@ query: str = Form(...)
 Error encountered:
 
 RuntimeError: Form data requires "python-multipart" to be installed
-# Resolution
+ --Resolution
 
 Installed the required dependency:
 
@@ -25,23 +25,8 @@ pip install python-multipart
 
 Added it to requirements.txt to prevent future failures.
 
-2 OpenRouter Model Name Misconfiguration
-# Issue
-
-Incorrect model format was used:
-
-openrouter/openai/gpt-3.5-turbo
-
-This caused API routing and authentication issues.
-
-# Resolution
-
-Corrected model name to OpenRouter’s expected format:
-
-openai/gpt-3.5-turbo
-
-3 base_url Not Passed to LLM
-# Issue
+# [2] base_url Not Passed to LLM
+ --Issue
 
 When using any llm model , the base_url must be explicitly defined.
 
@@ -51,7 +36,7 @@ https://api.openai.com/v1
 
 This caused request routing failures.
 
-# Resolution
+-- Resolution
 
 Updated LLM initialization in agent.py:
 
@@ -63,10 +48,9 @@ llm = ChatOpenAI(
 )
 
 This ensured correct routing to OpenRouter or any similar openai mdoel.
-# i have used openrouter api key 
 
-4 onnxruntime Dependency Causing Version Conflicts (Critical)
-# Issue
+#  [3] onnxruntime Dependency Causing Version Conflicts (Critical)
+ --Issue
 
 The original requirements.txt included:
 
@@ -86,7 +70,7 @@ Version clashes with CrewAI stack
 
 These libraries were unnecessary for an API-based LLM system.
 
-# Resolution
+-- Resolution
 
 Removed unnecessary ML runtime dependencies.
 
@@ -102,8 +86,8 @@ crewai-tools
 
 This stabilized environment installation and resolved version conflicts.
 
-5 Multi-Agent System Not Actually Executing
-# Issue
+#  [4] Multi-Agent System Not Actually Executing
+-- Issue
 
 Although multiple agents were defined, run_crew() only executed:
 
@@ -112,7 +96,7 @@ tasks=[analyze_financial_document]
 
 This resulted in a single-agent pipeline instead of a true multi-agent workflow.
 
-# Resolution
+-- Resolution
 
 Updated Crew initialization:
 
@@ -132,8 +116,8 @@ tasks=[
 
 Now the system runs full sequential multi-agent processing.
 
-6 Task Prompts Encouraged Hallucination
-# Issue
+# [4] Task Prompts Encouraged Hallucination
+-- Issue
 
 Original task descriptions instructed agents to:
 
@@ -149,7 +133,7 @@ Provide non-compliant investment recommendations
 
 This made the system unreliable and unsafe.
 
-# Resolution
+-- Resolution
 
 Rewrote all task descriptions to:
 
@@ -165,8 +149,8 @@ Include data limitations
 
 Maintain compliance-aware language
 
-7 Agent Prompts Encouraged Fabrication
-# Issue
+#  [5] Agent Prompts Encouraged Fabrication
+-- Issue
 
 Agents were configured with goals such as:
 
@@ -178,7 +162,7 @@ Agents were configured with goals such as:
 
 This created deterministic hallucination behavior.
 
-# Resolution
+-- Resolution
 
 Redesigned agents with:
 
