@@ -1,0 +1,10 @@
+crewai==0.130.0
+crewai-tools==0.47.1
+fastapi
+uvicorn
+google-generativeai
+google-cloud-aiplatform
+jinja2
+jsonschema
+openpyxl
+python-multipart
