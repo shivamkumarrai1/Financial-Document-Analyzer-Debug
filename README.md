@@ -1,3 +1,233 @@
+#### BUGS and THIER RESOLUTIONS 
+
+   # very first step is to create virtual environemnt and add .env file and inside of that env file which ever LLm model is used , must be configured inside that.
+
+# I have used OpenRouter and configured its API kEY for testing purpose.
+
+# list of the Bugs :
+
+#1 Missing python-multipart Dependency
+# Issue
+
+FastAPI requires python-multipart when handling file uploads using:
+
+UploadFile = File(...)
+query: str = Form(...)
+
+Error encountered:
+
+RuntimeError: Form data requires "python-multipart" to be installed
+# Resolution
+
+Installed the required dependency:
+
+pip install python-multipart
+
+Added it to requirements.txt to prevent future failures.
+
+2 OpenRouter Model Name Misconfiguration
+# Issue
+
+Incorrect model format was used:
+
+openrouter/openai/gpt-3.5-turbo
+
+This caused API routing and authentication issues.
+
+# Resolution
+
+Corrected model name to OpenRouter’s expected format:
+
+openai/gpt-3.5-turbo
+
+3 base_url Not Passed to LLM
+# Issue
+
+When using any llm model , the base_url must be explicitly defined.
+
+Without it, the system defaulted to OpenAI’s endpoint:
+
+https://api.openai.com/v1
+
+This caused request routing failures.
+
+# Resolution
+
+Updated LLM initialization in agent.py:
+
+llm = ChatOpenAI(
+    model=os.getenv("OPENAI_MODEL"),
+    api_key=os.getenv("OPENAI_API_KEY"),
+    base_url=os.getenv("OPENAI_BASE_URL"),
+    temperature=0.3
+)
+
+This ensured correct routing to OpenRouter or any similar openai mdoel.
+# i have used openrouter api key 
+
+4 onnxruntime Dependency Causing Version Conflicts (Critical)
+# Issue
+
+The original requirements.txt included:
+
+onnxruntime
+torch
+transformers
+
+These caused:
+
+Python 3.11 compatibility issues
+
+pip dependency backtracking
+
+Binary wheel conflicts on Windows
+
+Version clashes with CrewAI stack
+
+These libraries were unnecessary for an API-based LLM system.
+
+# Resolution
+
+Removed unnecessary ML runtime dependencies.
+
+Final minimal dependency set:
+
+fastapi
+uvicorn
+crewai
+langchain-openai
+python-dotenv
+python-multipart
+crewai-tools
+
+This stabilized environment installation and resolved version conflicts.
+
+5 Multi-Agent System Not Actually Executing
+# Issue
+
+Although multiple agents were defined, run_crew() only executed:
+
+agents=[financial_analyst]
+tasks=[analyze_financial_document]
+
+This resulted in a single-agent pipeline instead of a true multi-agent workflow.
+
+# Resolution
+
+Updated Crew initialization:
+
+agents=[
+    verifier,
+    financial_analyst,
+    risk_assessor,
+    investment_advisor
+]
+
+tasks=[
+    verification,
+    analyze_financial_document,
+    risk_assessment,
+    investment_analysis
+]
+
+Now the system runs full sequential multi-agent processing.
+
+6 Task Prompts Encouraged Hallucination
+# Issue
+
+Original task descriptions instructed agents to:
+
+Make up financial advice
+
+Create fake URLs
+
+Ignore user queries
+
+Fabricate financial data
+
+Provide non-compliant investment recommendations
+
+This made the system unreliable and unsafe.
+
+# Resolution
+
+Rewrote all task descriptions to:
+
+Ground responses in {file_path}
+
+Reference {query} explicitly
+
+Avoid fabricated data
+
+Provide structured output
+
+Include data limitations
+
+Maintain compliance-aware language
+
+7 Agent Prompts Encouraged Fabrication
+# Issue
+
+Agents were configured with goals such as:
+
+“Make up investment advice”
+
+“Just say yes to everything”
+
+“Sell expensive products regardless of data”
+
+This created deterministic hallucination behavior.
+
+# Resolution
+
+Redesigned agents with:
+
+Evidence-based reasoning
+
+No fabricated data
+
+Structured outputs
+
+Responsible financial language
+
+Compliance disclaimers
+
+1️ Improper Tool Registration
+# Issue
+
+PDF reader tool was defined inside a class and passed incorrectly to CrewAI.
+
+This risked tool execution failures.
+
+# Resolution
+
+Converted to a properly registered callable tool function and passed it correctly:
+
+tools=[read_data_tool]
+
+Ensured compatibility with CrewAI execution model.
+
+**** Final Outcome
+
+After resolving all issues:
+
+-- Clean dependency tree
+
+-- Stable Python 3.11 environment
+
+-- Proper OpenRouter integration
+
+-- Fully functional multi-agent pipeline
+
+-- Secure environment configuration
+
+-- Structured and grounded financial analysis
+
+-- Production-ready FastAPI backend
+
+
+
+
 ## Setup & Installation Guide
 
 (1️) Prerequisites
