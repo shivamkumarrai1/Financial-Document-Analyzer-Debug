@@ -440,10 +440,10 @@ Use HTTPS
 
 ## Final System Capabilities
 
-✔ Multi-agent architecture
-✔ Document-grounded analysis
-✔ Risk classification
-✔ Structured output
-✔ OpenRouter integration
-✔ Clean dependency management
-✔ Python 3.11 compatible
+-- Multi-agent architecture
+-- Document-grounded analysis
+-- Risk classification
+-- Structured output
+-- OpenRouter integration
+-- Clean dependency management
+-- Python 3.11 compatible
