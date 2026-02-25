@@ -174,16 +174,16 @@ Structured outputs
 
 Responsible financial language
 
-Compliance disclaimers
+# Compliance disclaimers
 
-1️ Improper Tool Registration
-# Issue
+# Improper Tool Registration
+-- Issue
 
 PDF reader tool was defined inside a class and passed incorrectly to CrewAI.
 
 This risked tool execution failures.
 
-# Resolution
+-- Resolution
 
 Converted to a properly registered callable tool function and passed it correctly:
 
